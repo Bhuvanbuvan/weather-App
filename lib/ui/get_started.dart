@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/models/constant.dart';
+import 'package:weather/ui/home.dart';
 import 'package:weather/ui/wellcome.dart';
 
 class GetStarted extends StatelessWidget {
@@ -36,7 +37,7 @@ class GetStarted extends StatelessWidget {
                 width: size.width * 0.7,
                 decoration: BoxDecoration(
                   color: myConstant.primaryColor,
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),

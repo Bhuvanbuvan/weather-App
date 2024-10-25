@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather/models/city.dart';
 import 'package:weather/models/constant.dart';
+import 'package:weather/ui/home.dart';
 
 class Wellcome extends StatefulWidget {
   const Wellcome({super.key});
@@ -16,31 +17,34 @@ class _WellcomeState extends State<Wellcome> {
         City.citieList.where((city) => city.isDefault == false).toList();
     List<City> selectedCities = City.getListOfCities();
     Size size = MediaQuery.of(context).size;
-    Constant _myConstant = Constant();
+    Constant myConstant = Constant();
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedCities.length.toString() + "Selected"),
+        title: Text("${selectedCities.length} Selected"),
+        backgroundColor: myConstant.primaryColor,
       ),
       body: ListView.builder(
         itemCount: cities.length,
         itemBuilder: (context, indext) {
           return Container(
-            margin: EdgeInsets.only(left: 10, right: 10, top: 20),
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             height: size.height * 0.08,
             width: size.width,
             decoration: BoxDecoration(
               border: cities[indext].isSelected == true
                   ? Border.all(
-                      color: _myConstant.primaryColor.withOpacity(.8), width: 2)
+                      color: myConstant.primaryColor.withOpacity(.8), width: 2)
                   : Border.all(color: Colors.white),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(10),
+              ),
               boxShadow: [
                 BoxShadow(
-                    color: _myConstant.primaryColor.withOpacity(.2),
+                    color: myConstant.primaryColor.withOpacity(.2),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3))
+                    offset: const Offset(0, 3))
               ],
             ),
             child: Row(
@@ -65,7 +69,7 @@ class _WellcomeState extends State<Wellcome> {
                   cities[indext].city,
                   style: TextStyle(
                       color: cities[indext].isSelected
-                          ? _myConstant.primaryColor
+                          ? myConstant.primaryColor
                           : Colors.black54,
                       fontSize: 16),
                 )
@@ -75,15 +79,20 @@ class _WellcomeState extends State<Wellcome> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: _myConstant.secondaryColor,
-        child: Icon(
+        backgroundColor: myConstant.secondaryColor,
+        shape: const CircleBorder(),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          );
+        },
+        child: const Icon(
           Icons.pin_drop,
           color: Colors.white,
         ),
-        shape: CircleBorder(),
-        onPressed: () {
-          print(selectedCities.length);
-        },
       ),
     );
   }

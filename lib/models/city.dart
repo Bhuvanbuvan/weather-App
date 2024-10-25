@@ -65,7 +65,7 @@ class City {
 
   // get cities
   static List<City> getListOfCities() {
-    List<City> selectedCities = [];
+    List<City> selectedCities = City.citieList;
 
     return selectedCities.where((city) => city.isSelected == true).toList();
   }

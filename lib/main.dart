@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather/models/city.dart';
 import 'package:weather/ui/get_started.dart';
 
 void main() {
@@ -15,7 +14,8 @@ class MyApp extends StatelessWidget {
         title: "Weather Application",
         theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            scaffoldBackgroundColor: Colors.white),
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(color: Colors.white)),
         showSemanticsDebugger: false,
         home: const GetStarted());
   }
