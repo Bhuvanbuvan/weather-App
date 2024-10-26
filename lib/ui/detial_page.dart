@@ -268,7 +268,7 @@ class _DetialPageState extends State<DetialPage> {
                     ),
                   ),
                   Positioned(
-                    top: 300,
+                    top: 250,
                     left: 20,
                     child: SizedBox(
                       height: 200,

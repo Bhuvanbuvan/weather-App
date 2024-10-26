@@ -72,234 +72,232 @@ class _HomeState extends State<Home> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: _homeAppBar(size),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              location,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-              ),
-            ),
-            Text(
-              currentDate,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Container(
-              width: size.width,
-              height: 200,
-              decoration: BoxDecoration(
-                color: constant.primaryColor,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(15),
+      body: SingleChildScrollView(
+        // Makes the main content scrollable
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                location,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                 ),
-                boxShadow: [
-                  BoxShadow(
+              ),
+              Text(
+                currentDate,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 50),
+              Container(
+                width: size.width,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: constant.primaryColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  boxShadow: [
+                    BoxShadow(
                       color: constant.primaryColor.withOpacity(.5),
                       offset: const Offset(0, 25),
                       blurRadius: 10,
-                      spreadRadius: -12)
-                ],
-              ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                    top: -40,
-                    left: 20,
-                    child: imageUrl == ''
-                        ? const Text('')
-                        : Image.asset(
-                            'assets/$imageUrl.png',
-                            width: 150,
-                          ),
-                  ),
-                  Positioned(
-                    bottom: 30,
-                    left: 20,
-                    child: Text(
-                      weatherStateName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                      spreadRadius: -12,
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      top: -40,
+                      left: 20,
+                      child: imageUrl == ''
+                          ? const Text('')
+                          : Image.asset(
+                              'assets/$imageUrl.png',
+                              width: 150,
+                            ),
+                    ),
+                    Positioned(
+                      bottom: 30,
+                      left: 20,
+                      child: Text(
+                        weatherStateName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 20,
-                    right: 20,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Text(
-                            temperature.toString(),
+                    Positioned(
+                      top: 20,
+                      right: 20,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              temperature.toString(),
+                              style: TextStyle(
+                                fontSize: 80,
+                                foreground: Paint()..shader = linearGradient,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'o',
                             style: TextStyle(
-                              fontSize: 80,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
                               foreground: Paint()..shader = linearGradient,
                             ),
                           ),
-                        ),
-                        Text(
-                          'o',
-                          style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = linearGradient),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  WeatherItem(
-                    windSpeed: windSpeed,
-                    text: "Wind Speed",
-                    unit: "Km/h",
-                    imageUrl: 'assets/windspeed.png',
-                  ),
-                  WeatherItem(
-                    windSpeed: humidity,
-                    text: "Humidity",
-                    unit: "Km/h",
-                    imageUrl: 'assets/humidity.png',
-                  ),
-                  WeatherItem(
-                    windSpeed: temperature,
-                    text: "Temperature",
-                    unit: "C",
-                    imageUrl: 'assets/max-temp.png',
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Today",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+                  ],
                 ),
-                Text(
-                  'Next 7 Days',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: constant.primaryColor,
+              ),
+              const SizedBox(height: 50),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    WeatherItem(
+                      windSpeed: windSpeed,
+                      text: "Wind Speed",
+                      unit: "Km/h",
+                      imageUrl: 'assets/windspeed.png',
+                    ),
+                    WeatherItem(
+                      windSpeed: humidity,
+                      text: "Humidity",
+                      unit: "Km/h",
+                      imageUrl: 'assets/humidity.png',
+                    ),
+                    WeatherItem(
+                      windSpeed: temperature,
+                      text: "Temperature",
+                      unit: "C",
+                      imageUrl: 'assets/max-temp.png',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Today",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
                   ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: consolidatedWeatherList.length,
-                itemBuilder: (context, index) {
-                  String today = DateTime.now().toString().substring(0, 10);
-                  String selectedDate = consolidatedWeatherList[index]['time']
-                      .toString()
-                      .substring(0, 10);
-                  var parsedDate = DateTime.parse(selectedDate);
-                  var newDate =
-                      DateFormat('EEEE').format(parsedDate).substring(0, 3);
-                  var futureWeatherName = "Clear";
-                  var weatherUrl =
-                      futureWeatherName.replaceAll(' ', '').toLowerCase();
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
+                  Text(
+                    'Next 7 Days',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: constant.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 150, // Fixed height for ListView
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: consolidatedWeatherList.length,
+                  itemBuilder: (context, index) {
+                    String today = DateTime.now().toString().substring(0, 10);
+                    String selectedDate = consolidatedWeatherList[index]['time']
+                        .toString()
+                        .substring(0, 10);
+                    var parsedDate = DateTime.parse(selectedDate);
+                    var newDate =
+                        DateFormat('EEEE').format(parsedDate).substring(0, 3);
+                    var futureWeatherName = "Clear";
+                    var weatherUrl =
+                        futureWeatherName.replaceAll(' ', '').toLowerCase();
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
                             builder: (context) => DetialPage(
-                                  consolidatedWeatherList:
-                                      consolidatedWeatherList,
-                                  selectedId: index,
-                                  location: location,
-                                )),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      margin:
-                          const EdgeInsets.only(right: 20, top: 10, bottom: 10),
-                      width: 100,
-                      decoration: BoxDecoration(
+                              consolidatedWeatherList: consolidatedWeatherList,
+                              selectedId: index,
+                              location: location,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        margin: const EdgeInsets.only(
+                            right: 20, top: 10, bottom: 10),
+                        width: 100,
+                        decoration: BoxDecoration(
                           color: selectedDate == today
                               ? constant.primaryColor
                               : Colors.white,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
                               offset: const Offset(0, 1),
                               color: today == selectedDate
                                   ? constant.primaryColor
                                   : Colors.black54.withOpacity(.2),
-                            )
-                          ]),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${consolidatedWeatherList[index]["values"]['temperature'].toDouble().round()}C',
-                            style: TextStyle(
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${consolidatedWeatherList[index]["values"]['temperature'].toDouble().round()}C',
+                              style: TextStyle(
                                 fontSize: 17,
                                 color: selectedDate == today
                                     ? Colors.white
-                                    : constant.primaryColor),
-                          ),
-                          Image.asset(
-                            'assets/$weatherUrl.png',
-                            width: 40,
-                          ),
-                          Text(
-                            newDate,
-                            style: TextStyle(
+                                    : constant.primaryColor,
+                              ),
+                            ),
+                            Image.asset(
+                              'assets/$weatherUrl.png',
+                              width: 40,
+                            ),
+                            Text(
+                              newDate,
+                              style: TextStyle(
                                 color: selectedDate == today
                                     ? Colors.white
                                     : constant.primaryColor,
                                 fontSize: 17,
-                                fontWeight: FontWeight.w800),
-                          )
-                        ],
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
