@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:weather/models/constant.dart';
-import 'package:weather/ui/home.dart';
 import 'package:weather/ui/wellcome.dart';
 
 class GetStarted extends StatelessWidget {
