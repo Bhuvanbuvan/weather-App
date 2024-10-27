@@ -264,7 +264,6 @@ class _HomeState extends State<Home> {
                         DateFormat('EEEE').format(parsedDate).substring(0, 3);
                     var futureWeatherName =
                         minutelyDatas[index]['weather'][0]['main'].toString();
-                    ;
                     var weatherUrl =
                         futureWeatherName.replaceAll(' ', '').toLowerCase();
                     return GestureDetector(

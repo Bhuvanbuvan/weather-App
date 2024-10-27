@@ -71,7 +71,6 @@ class _DetialPageState extends State<DetialPage> {
                   var futureWeatherNews = widget.consolidatedWeatherList[index]
                           ['weather'][0]['main']
                       .toString();
-                  ;
                   String selectedDate = widget.consolidatedWeatherList[index]
                           ['dt_txt']
                       .toString()
@@ -291,7 +290,6 @@ class _DetialPageState extends State<DetialPage> {
                               .consolidatedWeatherList[index]['weather'][0]
                                   ['main']
                               .toString();
-                          ;
                           String selectedDate = widget
                               .consolidatedWeatherList[index]['dt_txt']
                               .toString()
