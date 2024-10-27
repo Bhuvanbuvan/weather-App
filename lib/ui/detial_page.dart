@@ -281,7 +281,7 @@ class _DetialPageState extends State<DetialPage> {
                     top: 250,
                     left: 20,
                     child: SizedBox(
-                      height: 200,
+                      height: 230,
                       width: size.width * .9,
                       child: ListView.builder(
                         itemCount: widget.consolidatedWeatherList.length,
