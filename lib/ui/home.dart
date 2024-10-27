@@ -31,55 +31,6 @@ class _HomeState extends State<Home> {
   var selectedCity = City.getListOfCities();
   List<String> cities = ['Chennai'];
   List consolidatedWeatherList = [];
-
-  void getLatLon({required String city}) async {
-    var httpresponse = await http.get(Uri.parse(
-        'http://api.openweathermap.org/geo/1.0/direct?q=$city&limit=1&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
-    var result = json.decode(httpresponse.body);
-    lat = result[0]['lat'].toDouble().round().toString();
-    lon = result[0]['lon'].toDouble().round().toString();
-    getWeather(lat: lat, lon: lon);
-  }
-
-  void getWeather({required String lat, required String lon}) async {
-    var weather = await http.get(Uri.parse(
-        'http://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
-    var result = json.decode(weather.body);
-    var datas = result['list'];
-    setState(() {
-      minutelyDatas.clear();
-      for (var data in datas) {
-        var currentDate = data['dt_txt'].toString().substring(0, 10);
-
-        // Check if the date already exists in wheatherData
-        bool dateExists = minutelyDatas.any((weather) =>
-            weather['dt_txt'].toString().substring(0, 10) == currentDate);
-
-        // If the date is not present, add it to both minutelyDatas and wheatherData
-        if (!dateExists) {
-          minutelyDatas.add(data);
-        }
-      }
-
-      //   // Safely check if the temperature value exists before converting
-      double temperatureInCelsius =
-          minutelyDatas[0]['main']['temp'].toDouble() - 273.15;
-      temperature = temperatureInCelsius.round();
-
-      weatherStateName = minutelyDatas[0]['weather'][0]['main'].toString();
-      humidity = minutelyDatas[0]['main']['humidity'].toDouble().round();
-
-      windSpeed = (minutelyDatas[0]['wind']['speed'].toDouble() * 3.6)
-          .toDouble()
-          .round();
-      var mydate = DateTime.parse(minutelyDatas[0]['dt_txt']);
-      currentDate = DateFormat('EEEE,d MMMM').format(mydate);
-      imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
-      print(imageUrl);
-      consolidatedWeatherList = minutelyDatas.toSet().toList();
-    });
-  }
-
   @override
   void initState() {
     getLatLon(city: location);
@@ -87,6 +38,64 @@ class _HomeState extends State<Home> {
       cities.add(selectedCity[i].city);
     }
     super.initState();
+  }
+
+  Future<void> getLatLon({required String city}) async {
+    try {
+      var httpresponse = await http.get(Uri.parse(
+          'http://api.openweathermap.org/geo/1.0/direct?q=$city&limit=1&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
+      if (httpresponse.statusCode == 200) {
+        var result = json.decode(httpresponse.body);
+        lat = result[0]['lat'].toDouble().round().toString();
+        lon = result[0]['lon'].toDouble().round().toString();
+        getWeather(lat: lat, lon: lon);
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
+
+  Future<void> getWeather({required String lat, required String lon}) async {
+    try {
+      var weather = await http.get(Uri.parse(
+          'http://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
+      if (weather.statusCode == 200) {
+        var weather = await http.get(Uri.parse(
+            'http://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
+        var result = json.decode(weather.body);
+        var datas = result['list'];
+        setState(() {
+          minutelyDatas.clear();
+          for (var data in datas) {
+            var currentDate = data['dt_txt'].toString().substring(0, 10);
+            bool dateExists = minutelyDatas.any((weather) =>
+                weather['dt_txt'].toString().substring(0, 10) == currentDate);
+            if (!dateExists) {
+              minutelyDatas.add(data);
+            }
+          }
+
+          double temperatureInCelsius =
+              minutelyDatas[0]['main']['temp'].toDouble() - 273.15;
+          temperature = temperatureInCelsius.round();
+
+          weatherStateName = minutelyDatas[0]['weather'][0]['main'].toString();
+          humidity = minutelyDatas[0]['main']['humidity'].toDouble().round();
+
+          windSpeed = (minutelyDatas[0]['wind']['speed'].toDouble() * 3.6)
+              .toDouble()
+              .round();
+          var mydate = DateTime.parse(minutelyDatas[0]['dt_txt']);
+          currentDate = DateFormat('EEEE,d MMMM').format(mydate);
+          imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
+          consolidatedWeatherList = minutelyDatas.toSet().toList();
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
   }
 
   final Shader linearGradient = const LinearGradient(
