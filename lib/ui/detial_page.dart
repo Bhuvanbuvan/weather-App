@@ -28,7 +28,8 @@ class _DetialPageState extends State<DetialPage> {
             colors: <Color>[Color(0xffABCFF2), Color(0xff9AC6F3)])
         .createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
     int selectedIndex = widget.selectedId;
-    var weatherStateName = 'Clear';
+    var weatherStateName =
+        widget.consolidatedWeatherList[selectedIndex]['weather'][0]['main'];
     imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
     return Scaffold(
       backgroundColor: constant.secondaryColor,
@@ -67,9 +68,12 @@ class _DetialPageState extends State<DetialPage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.consolidatedWeatherList.length,
                 itemBuilder: (context, index) {
-                  var futureWeatherNews = 'Clear';
+                  var futureWeatherNews = widget.consolidatedWeatherList[index]
+                          ['weather'][0]['main']
+                      .toString();
+                  ;
                   String selectedDate = widget.consolidatedWeatherList[index]
-                          ['time']
+                          ['dt_txt']
                       .toString()
                       .substring(0, 10);
                   var weatherUrl =
@@ -98,7 +102,7 @@ class _DetialPageState extends State<DetialPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${widget.consolidatedWeatherList[index]["values"]['temperature'].toDouble().round()}C',
+                          '${(widget.consolidatedWeatherList[index]['main']['temp'].toDouble() - 273.15).toDouble().round()}C',
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -201,9 +205,11 @@ class _DetialPageState extends State<DetialPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   WeatherItem(
-                                    windSpeed: widget
-                                        .consolidatedWeatherList[selectedIndex]
-                                            ['values']['windSpeed']
+                                    windSpeed: (widget.consolidatedWeatherList[
+                                                    selectedIndex]['wind']
+                                                    ['speed']
+                                                .toDouble() *
+                                            3.6)
                                         .toDouble()
                                         .round(),
                                     text: "Wind Speed",
@@ -213,7 +219,7 @@ class _DetialPageState extends State<DetialPage> {
                                   WeatherItem(
                                     windSpeed: widget
                                         .consolidatedWeatherList[selectedIndex]
-                                            ['values']['humidity']
+                                            ['main']['humidity']
                                         .toDouble()
                                         .round(),
                                     text: "Humidity",
@@ -221,9 +227,11 @@ class _DetialPageState extends State<DetialPage> {
                                     imageUrl: 'assets/humidity.png',
                                   ),
                                   WeatherItem(
-                                    windSpeed: widget
-                                        .consolidatedWeatherList[selectedIndex]
-                                            ['values']['temperature']
+                                    windSpeed: (widget.consolidatedWeatherList[
+                                                    selectedIndex]['main']
+                                                    ['temp']
+                                                .toDouble() -
+                                            273.15)
                                         .toDouble()
                                         .round(),
                                     text: "Temperature",
@@ -241,8 +249,10 @@ class _DetialPageState extends State<DetialPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.consolidatedWeatherList[selectedIndex]
-                                          ['values']['temperature']
+                                  (widget.consolidatedWeatherList[selectedIndex]
+                                                  ['main']['temp']
+                                              .toDouble() -
+                                          273.15)
                                       .toDouble()
                                       .round()
                                       .toString(),
@@ -277,9 +287,13 @@ class _DetialPageState extends State<DetialPage> {
                         itemCount: widget.consolidatedWeatherList.length,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
-                          var futureWeatherNews = 'Clear';
+                          var futureWeatherNews = widget
+                              .consolidatedWeatherList[index]['weather'][0]
+                                  ['main']
+                              .toString();
+                          ;
                           String selectedDate = widget
-                              .consolidatedWeatherList[index]['time']
+                              .consolidatedWeatherList[index]['dt_txt']
                               .toString()
                               .substring(0, 10);
                           var futureWeatherUrl = futureWeatherNews
@@ -338,9 +352,11 @@ class _DetialPageState extends State<DetialPage> {
                                         ),
                                       ),
                                       Text(
-                                        widget.consolidatedWeatherList[
-                                                selectedIndex]['values']
-                                                ['temperature']
+                                        (widget.consolidatedWeatherList[
+                                                        selectedIndex]['main']
+                                                        ['temp']
+                                                    .toDouble() -
+                                                273.15)
                                             .toDouble()
                                             .round()
                                             .toString(),

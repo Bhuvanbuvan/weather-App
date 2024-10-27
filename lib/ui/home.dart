@@ -18,46 +18,71 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final Constant constant = Constant();
 
+  String lat = '';
+  String lon = '';
   int temperature = 0;
-  int maxTemp = 0;
   String weatherStateName = 'Loading...';
   int humidity = 0;
   int windSpeed = 0;
   var currentDate = 'Loading...';
   String imageUrl = '';
   List minutelyDatas = [];
-  String location = 'London';
+  String location = 'Chennai';
   var selectedCity = City.getListOfCities();
-  List<String> cities = ['London'];
+  List<String> cities = ['Chennai'];
   List consolidatedWeatherList = [];
+
+  void getLatLon({required String city}) async {
+    var httpresponse = await http.get(Uri.parse(
+        'http://api.openweathermap.org/geo/1.0/direct?q=$city&limit=1&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
+    var result = json.decode(httpresponse.body);
+    lat = result[0]['lat'].toDouble().round().toString();
+    lon = result[0]['lon'].toDouble().round().toString();
+    getWeather(lat: lat, lon: lon);
+  }
 
   void getWeather({required String lat, required String lon}) async {
     var weather = await http.get(Uri.parse(
-        'https://api.tomorrow.io/v4/weather/forecast?location=$lat,$lon&apikey=jcrzH286mPEmv5VHQW1XdKw2NV0kuUxK'));
+        'http://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=a2c78d3ed85c5de81871ebffa5c7ce03'));
     var result = json.decode(weather.body);
-    var datas = result['timelines']['minutely'];
-
+    var datas = result['list'];
     setState(() {
-      for (var i = 0; i < 7; i++) {
-        minutelyDatas.add(datas[i]);
+      minutelyDatas.clear();
+      for (var data in datas) {
+        var currentDate = data['dt_txt'].toString().substring(0, 10);
+
+        // Check if the date already exists in wheatherData
+        bool dateExists = minutelyDatas.any((weather) =>
+            weather['dt_txt'].toString().substring(0, 10) == currentDate);
+
+        // If the date is not present, add it to both minutelyDatas and wheatherData
+        if (!dateExists) {
+          minutelyDatas.add(data);
+        }
       }
-      // Safely check if the temperature value exists before converting
-      temperature =
-          minutelyDatas[0]['values']['temperature'].toDouble().round();
-      weatherStateName = "clear";
-      humidity = minutelyDatas[0]['values']['humidity'].toDouble().round();
-      windSpeed = minutelyDatas[0]['values']['windSpeed'].toDouble().round();
-      maxTemp = minutelyDatas[0]['values']['temperature'].toDouble().round();
-      var mydate = DateTime.parse(minutelyDatas[0]['time']);
+
+      //   // Safely check if the temperature value exists before converting
+      double temperatureInCelsius =
+          minutelyDatas[0]['main']['temp'].toDouble() - 273.15;
+      temperature = temperatureInCelsius.round();
+
+      weatherStateName = minutelyDatas[0]['weather'][0]['main'].toString();
+      humidity = minutelyDatas[0]['main']['humidity'].toDouble().round();
+
+      windSpeed = (minutelyDatas[0]['wind']['speed'].toDouble() * 3.6)
+          .toDouble()
+          .round();
+      var mydate = DateTime.parse(minutelyDatas[0]['dt_txt']);
       currentDate = DateFormat('EEEE,d MMMM').format(mydate);
       imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
+      print(imageUrl);
       consolidatedWeatherList = minutelyDatas.toSet().toList();
     });
   }
 
   @override
   void initState() {
-    getWeather(lat: "42.3478", lon: "-71.0466");
+    getLatLon(city: location);
     for (var i = 0; i < selectedCity.length; i++) {
       cities.add(selectedCity[i].city);
     }
@@ -221,13 +246,16 @@ class _HomeState extends State<Home> {
                   itemCount: consolidatedWeatherList.length,
                   itemBuilder: (context, index) {
                     String today = DateTime.now().toString().substring(0, 10);
-                    String selectedDate = consolidatedWeatherList[index]['time']
+                    String selectedDate = consolidatedWeatherList[index]
+                            ['dt_txt']
                         .toString()
                         .substring(0, 10);
                     var parsedDate = DateTime.parse(selectedDate);
                     var newDate =
                         DateFormat('EEEE').format(parsedDate).substring(0, 3);
-                    var futureWeatherName = "Clear";
+                    var futureWeatherName =
+                        minutelyDatas[index]['weather'][0]['main'].toString();
+                    ;
                     var weatherUrl =
                         futureWeatherName.replaceAll(' ', '').toLowerCase();
                     return GestureDetector(
@@ -256,18 +284,18 @@ class _HomeState extends State<Home> {
                               const BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
-                              offset: const Offset(0, 1),
-                              color: today == selectedDate
-                                  ? constant.primaryColor
-                                  : Colors.black54.withOpacity(.2),
-                            ),
+                                offset: const Offset(0, 1),
+                                color: today == selectedDate
+                                    ? constant.primaryColor
+                                    : Colors.black54.withOpacity(.2),
+                                blurRadius: today == selectedDate ? 1 : 5),
                           ],
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${consolidatedWeatherList[index]["values"]['temperature'].toDouble().round()}C',
+                              '${(consolidatedWeatherList[index]['main']['temp'].toDouble() - 273.15).toDouble().round()}C',
                               style: TextStyle(
                                 fontSize: 17,
                                 color: selectedDate == today
@@ -345,7 +373,8 @@ class _HomeState extends State<Home> {
                     onChanged: (String? newLocation) {
                       setState(() {
                         location = newLocation!;
-                        getWeather(lat: "42.3478", lon: "-71.0466");
+                        getLatLon(city: location);
+                        print(location);
                       });
                     },
                   ),
